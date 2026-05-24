@@ -8,29 +8,24 @@ def init_google_ai():
     Inisialisasi Google AI dengan prioritas Streamlit Secrets
     """
     try:
-        # 1. Prioritas utama: Coba ambil dari Streamlit Secrets
         if "GOOGLE_API_KEY" in st.secrets:
             api_key = st.secrets["GOOGLE_API_KEY"]
             
-        # 2. Alternatif: Jika dijalankan di komputer lokal (butuh dotenv)
         else:
             try:
                 from dotenv import load_dotenv
                 load_dotenv()
             except ImportError:
-                pass # Abaikan jika tidak ada dotenv di Cloud
+                pass 
                 
             api_key = os.getenv("GOOGLE_API_KEY")
             
-        # Pengecekan akhir apakah key berhasil didapat
         if not api_key:
             st.error("⚠️ Google API Key tidak ditemukan! Silakan cek Settings > Secrets di Streamlit Cloud.")
             st.stop()
             
-        # Configure Google AI
         genai.configure(api_key=api_key)
         
-        # Initialize model
         model = genai.GenerativeModel('gemini-2.5-flash')
         return model
         
